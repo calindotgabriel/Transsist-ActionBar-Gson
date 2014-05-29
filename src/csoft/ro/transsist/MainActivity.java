@@ -3,24 +3,27 @@ package csoft.ro.transsist;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import java.util.ArrayList;
 
-public class MainActivity extends SherlockActivity {
+public class MainActivity extends SherlockFragmentActivity {
     /**
      *
      */
     ActionBarDrawerToggle mDrawerToggle;
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,8 @@ public class MainActivity extends SherlockActivity {
     }
 
     public void loadDrawer () {
+        final String PROGRAM = "Program";
+        final String HARTA = "Harta";
 
         mDrawerLayout =
                 (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -42,8 +47,8 @@ public class MainActivity extends SherlockActivity {
         actionBar.setHomeButtonEnabled(true);
 
         ArrayList<Item> drawerItems = new ArrayList<Item>();
-        drawerItems.add(new Item("Program"));
-        drawerItems.add(new Item("Harta"));
+        drawerItems.add(new Item(PROGRAM));
+        drawerItems.add(new Item(HARTA));
 
         DrawerItemAdapter adapter =
                 new DrawerItemAdapter(this, drawerItems);
@@ -65,7 +70,6 @@ public class MainActivity extends SherlockActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-
     }
 
     private class SlideMenuClickListener implements
@@ -78,7 +82,30 @@ public class MainActivity extends SherlockActivity {
     }
 
     public void displayView(int position) {
-        Toast.makeText(this, "Clicked " + position, Toast.LENGTH_SHORT).show();
+
+        checkAndCloseDrawer(position);
+
+        Fragment fragment = null;
+
+        switch (position) {
+            case 1: // check if we already have a mapfragment in our frame
+                if (getSupportFragmentManager().findFragmentById(R.id.frame_container)
+                        instanceof MapFragment)
+                    checkAndCloseDrawer(position);
+                else
+                    fragment = new MapFragment();
+                break;
+            default:
+                Toast.makeText(this, "Clicked " + position, Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        if (fragment != null) {
+           getSupportFragmentManager().beginTransaction().
+                   replace(R.id.frame_container, fragment).commit();
+        }
+
+
     }
 
     @Override
@@ -96,17 +123,11 @@ public class MainActivity extends SherlockActivity {
         return true;
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+    public void checkAndCloseDrawer(int position) {
+        mDrawerList.setItemChecked(position, true);
+        mDrawerList.setSelection(position);
+        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
+
 }

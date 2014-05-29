@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Transsist.iml" filepath="$PROJECT_DIR$/Transsist.iml" />
       <module fileurl="file://$PROJECT_DIR$/../JakeWharton-ActionBarSherlock-5a15d92/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/../JakeWharton-ActionBarSherlock-5a15d92/actionbarsherlock/actionbarsherlock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../froyo_lib_googleplay-services/google-play-services_lib/google-play-services_lib.iml" filepath="$PROJECT_DIR$/../froyo_lib_googleplay-services/google-play-services_lib/google-play-services_lib.iml" />
     </modules>
   </component>
 </project>
